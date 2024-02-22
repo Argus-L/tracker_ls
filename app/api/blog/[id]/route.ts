@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import { dataConnect } from "../route";
 import { Prisma } from "@prisma/client";
 
 export const GET = async (req: Request, res: NextResponse) => {
     try {
         const id = parseInt(req.url.split("/blog/")[1]);
-        await dataConnect();
         const post = await prisma?.post.findFirst({where: {id}});
         if(!post) 
             return NextResponse.json({message: "Not Found"}, {status: 404});
@@ -21,7 +19,6 @@ export const PUT = async (req: Request, res: NextResponse) => {
     try {
         const id = parseInt(req.url.split("/blog/")[1]);
         const {title, location, skills, company, salary, description} = await req.json();
-        await dataConnect ();
         const post = await prisma?.post.update({
             data: {title, location, skills, company, salary, description}, 
             where: {id},
@@ -37,7 +34,6 @@ export const PUT = async (req: Request, res: NextResponse) => {
 export const DELETE = async (req: Request, res: NextResponse) => {
     try {
         const id = parseInt(req.url.split("/blog/")[1]);
-        await dataConnect ();
         const post = await prisma?.post.delete({where: {id}});
         return NextResponse.json({message: "Success" , post}, {status: 200});
     } catch (error) {
