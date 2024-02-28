@@ -7,7 +7,7 @@ import ListView from '@/app/components/listView';
 import { usePathname } from 'next/navigation';
 
 async function fetchPosts(url: string) {
-  const res = await fetch(`/api/blog`, { 
+  const res = await fetch(`${url}api/blog`, { 
     next: {
       revalidate: 0,
     },
