@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react'
 import {Fragment, useRef} from 'react'
 import {Toaster, toast} from 'react-hot-toast'
-import {useRouter} from 'next/navigation'
+import {useRouter, usePathname} from 'next/navigation'
 type UpdatePostParams = {
     id: number,
     title:string, 
@@ -15,7 +15,7 @@ type UpdatePostParams = {
 }
 
 const updatePost = async (data: UpdatePostParams) => {
-  const res = fetch(`http://localhost:3000/api/blog/${data.id}`, {
+  const res = fetch(`/api/blog/${data.id}`, {
     method: "PUT", 
     body: JSON.stringify({title: data.title, location: data.location, skills: data.skills, salary: data.salary, company: data.company, description: data.description}),
     //@ts-ignore
@@ -25,7 +25,7 @@ const updatePost = async (data: UpdatePostParams) => {
 }
 
 const deletePost = async (id: number) => {
-    const res = fetch(`http://localhost:3000/api/blog/${id}`, {
+    const res = fetch(`/api/blog/${id}`, {
       method: "DELETE", 
       //@ts-ignore
       "Content-Type":"application/json",
@@ -34,7 +34,7 @@ const deletePost = async (id: number) => {
   }
 
 const getPostById = async (id:number) => {
-    const res = await fetch(`http://localhost:3000/api/blog/${id}`);
+    const res = await fetch(`/api/blog/${id}`);
     const data = await res.json();
     return data.post;
 }

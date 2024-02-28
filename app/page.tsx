@@ -1,14 +1,13 @@
-import Link from 'next/link'
-import DeleteButton from './components/DeleteButton';
 export const dynamic = "force-dynamic";
-import SearchInput from './components/SearchInput'
+import SearchInput from './components/SearchInput';
 import { Suspense } from 'react';
-import Table from '@/app/components/table'
-import Toggle from '@/app/components/toggle'
-import ListView from '@/app/components/listView'
+import Table from '@/app/components/table';
+import Toggle from '@/app/components/toggle';
+import ListView from '@/app/components/listView';
+import { usePathname } from 'next/navigation';
 
-async function fetchPosts() {
-  const res = await fetch("http://localhost:3000/api/blog", { 
+async function fetchPosts(url: string) {
+  const res = await fetch(`/api/blog`, { 
     next: {
       revalidate: 0,
     },
@@ -27,7 +26,8 @@ export default async function Home({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const posts = await fetchPosts();
+  const pathname = usePathname();
+  const posts = await fetchPosts(pathname);
   
 
   return (

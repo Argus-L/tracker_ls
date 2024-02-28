@@ -3,10 +3,11 @@
 import React from 'react'
 import {Fragment, useRef} from 'react'
 import {Toaster, toast} from 'react-hot-toast'
-import {useRouter} from 'next/navigation'
+import {useRouter, usePathname} from 'next/navigation'
 
-const submitPost = async ({title, location, skills, salary, company, description} : {title:string, location:string, skills:string, salary:number, company:string, description:string}) => {
-  const res = fetch("http://localhost:3000/api/blog", {
+const submitPost = async ({title, location, skills, salary, company, description} : {title:string, location:string, skills:string, salary:number, company:string, description:string}, url: string) => {
+  //const rootURL = url[0];
+  const res = fetch(`/api/blog`, {
     method: "POST", 
     body: JSON.stringify({title, location, skills, salary, company, description}),
     //@ts-ignore
@@ -24,6 +25,7 @@ const AddPost = () => {
   const companyRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
@@ -36,7 +38,7 @@ const AddPost = () => {
         salary: salaryRef.current?.valueAsNumber,
         company: companyRef.current?.value,
         description: descriptionRef.current?.value,
-      });
+      }, pathname);
       toast.success("Job Posted Successfully", {id: "1"})
       router.push('/');
       router.refresh();
