@@ -32,7 +32,7 @@ export default async function Home({
   return (
     <main className="w-full h-full">
       <div className="md:w-2/4 sm:w-3/4 m-auto p-4 my-4 rounded-lg bg-slate-800 drop-shadow-xl">
-        <h1 className="text-slate-200 text-center text-2xl font-extrabold font-family[verdana]">Job Tracker: {posts.length}</h1>
+        <h1 className="text-slate-200 text-center text-2xl font-extrabold font-family[verdana]">Job Tracker</h1>
       </div>
       <div className="flex flex-col items-center w-full">
           <SearchInput placeholder="Search..." />
