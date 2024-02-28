@@ -1,12 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
+import {NEXT_URL} from '@/app/components/rootURL'
 
 export default function DeleteButton({ id }: { id: number }) {
   const router = useRouter();
 
   async function deleteJob(id: number) {
     try {
-        await fetch(`http://localhost:3000/api/blog/${id}`, {
+        await fetch(`${NEXT_URL}/api/blog/${id}`, {
             method: "DELETE",
             //@ts-ignore
             "Content-Type":"application/json",

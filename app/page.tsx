@@ -4,10 +4,10 @@ import { Suspense } from 'react';
 import Table from '@/app/components/table';
 import Toggle from '@/app/components/toggle';
 import ListView from '@/app/components/listView';
-import { usePathname } from 'next/navigation';
+import { NEXT_URL } from '@/app/components/rootURL';
 
-async function fetchPosts(url: string) {
-  const res = await fetch(`${url}api/blog`, { 
+async function fetchPosts() {
+  const res = await fetch(`${NEXT_URL}/api/blog`, { 
     next: {
       revalidate: 0,
     },
@@ -26,8 +26,7 @@ export default async function Home({
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const pathname = usePathname();
-  const posts = await fetchPosts(pathname);
+  const posts = await fetchPosts();
   
 
   return (
