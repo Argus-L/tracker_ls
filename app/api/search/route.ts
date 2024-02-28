@@ -2,9 +2,9 @@ import { NextResponse, NextRequest } from "next/server";
 import prisma from '@/prisma'
 
 export const GET = async (req:NextRequest, res:NextResponse) => {
+    const query = req.nextUrl.searchParams.get('query');
     if(req.method === "GET") {
         try {
-            const query = req.nextUrl.searchParams.get('query');
             if(typeof query !== 'string') {
                 throw new Error('Invalid Request');
             }
@@ -45,7 +45,6 @@ export const GET = async (req:NextRequest, res:NextResponse) => {
                     ]
                 }
             })
-            console.log('AT THE API')
             return NextResponse.json({jobs}, {status: 200})
         } catch (error) {
             console.log(error);
