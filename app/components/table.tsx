@@ -1,21 +1,34 @@
-import { basicSearch } from '@/app/components/basicSearch'
+export const dynamic = "force-dynamic";
 import DeleteButton from '@/app/components/DeleteButton';
+import { NEXT_URL } from '@/app/components/rootURL';
 import Link from 'next/link'
-
 
 export default async function JobsTable({
     query,
     currentPage,
+    sortBy,
+    filterBy,
+    filterOption
 }: {
     query: string;
     currentPage:number;
+    sortBy: string;
+    filterBy: string;
+    filterOption:string;
 }) {
-    const jobs = await basicSearch(query, currentPage);
-    const data = await jobs?.json();
 
+    const GetSearchResults = async () => {
+        const res = await fetch(`${NEXT_URL}/api/search/?sortBy=${sortBy}&filterBy=${filterBy}&filterOption=${filterOption}&query=${query}`);
+        const data = await res.json();
+        return data.jobs;
+    }
+
+    const jobs = await GetSearchResults();
+    
+    
     return (
-        <div className="flex min-w-full align-middle p-5">
-            <table className="hidden min-w-full text-gray-100 md:table border">
+        <div className="flex flex-col min-w-full align-middle p-5">
+            <table className="min-w-full text-gray-100 md:table">
                 <thead className="text-left border">
                     <tr>
                         <th scope="col" className="border">
@@ -48,7 +61,7 @@ export default async function JobsTable({
                     </tr>
                 </thead>
                 <tbody >
-                    {data.jobs.map((job:any) => (
+                    {jobs.map((job:any) => (
                         <tr key = {job.id} className="border">
                             <td className="border">
                                 <p>{job.title}</p>
@@ -79,9 +92,7 @@ export default async function JobsTable({
                                <DeleteButton id={job.id}/>
                             </td>
                         </tr>
-                    ))
-
-                    }
+                    ))}
                 </tbody>
             </table>
         </div>

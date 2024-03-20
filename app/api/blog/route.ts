@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import { NextResponse, NextRequest } from "next/server";
 
-export const GET = async (req:NextRequest, res:NextResponse) => {
+/*export const GET = async (req:NextRequest, res:NextResponse) => {
     console.log("GET");
     try {
         const posts = await prisma.post.findMany();
@@ -12,7 +12,7 @@ export const GET = async (req:NextRequest, res:NextResponse) => {
     } finally {
         await prisma.$disconnect();
     }
-}
+}*/
 
 export const POST = async (req:Request, res:NextResponse) => {
     console.log("POST");
@@ -26,11 +26,3 @@ export const POST = async (req:Request, res:NextResponse) => {
         await prisma.$disconnect();
     }
 }
-
-/*export const GET = async (req:Request, res:NextResponse) => {
-    const q = req.url;
-    console.log("AT THE API",);
-    return (
-                NextResponse.json({q}, {status: 200})
-           );
-}*/

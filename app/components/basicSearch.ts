@@ -1,9 +1,12 @@
 import prisma from '@/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 
+export const dynamic = "force-dynamic";
+
 export async function basicSearch(
     query: string,
     currentPage: number,
+    sortBy: string,
 ) {
     if(isNaN(Number(query)) || query == null || query == "") {
         try {
@@ -36,9 +39,12 @@ export async function basicSearch(
                             },
                         },
                     ],
-                }, 
+                },
             })
-            return NextResponse.json({jobs}, {status: 200})
+            return (
+                    console.log(sortBy),
+                    NextResponse.json({jobs}, {status: 200})
+                )
         } catch (error) {
             console.log(error);
         }
@@ -65,5 +71,4 @@ export async function basicSearch(
             console.log(error);
         }
     }
-    
 }

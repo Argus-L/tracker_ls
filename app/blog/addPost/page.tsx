@@ -7,7 +7,6 @@ import {useRouter} from 'next/navigation'
 import { NEXT_URL } from '@/app/components/rootURL';
 
 const submitPost = async ({title, location, skills, salary, company, description} : {title:string, location:string, skills:string, salary:number, company:string, description:string}) => {
-  //const rootURL = url[0];
   const res = fetch(`${NEXT_URL}/api/blog`, {
     method: "POST", 
     body: JSON.stringify({title, location, skills, salary, company, description}),

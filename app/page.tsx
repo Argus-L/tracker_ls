@@ -6,7 +6,7 @@ import Toggle from '@/app/components/toggle';
 import ListView from '@/app/components/listView';
 import { NEXT_URL } from '@/app/components/rootURL';
 
-async function fetchPosts() {
+/*async function fetchPosts() {
   const res = await fetch(`${NEXT_URL}/api/blog`, { 
     next: {
       revalidate: 0,
@@ -14,19 +14,24 @@ async function fetchPosts() {
   });
   const data = await res.json();
   return data.posts;
-}
+}*/
 
-export default async function Home({
+export default function Home({
   searchParams,
 }: {
   searchParams?: {
     query?:string;
     page?:string;
+    sortBy?:string;
+    filterBy?:string;
+    filterOption?:string;
   };
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
-  const posts = await fetchPosts();
+  const sortBy = searchParams?.sortBy || '';
+  const filterBy = searchParams?.filterBy || '';
+  const filterOption = searchParams?.filterOption || '';
   
 
   return (
@@ -38,11 +43,11 @@ export default async function Home({
           <SearchInput placeholder="Search..." />
       </div>
       <Toggle>
-        <Suspense key={query + currentPage}>
-          <Table query={query} currentPage={currentPage} />          
+        <Suspense key={query + currentPage + sortBy + filterBy + filterOption}>
+          <Table query={query} currentPage={currentPage} sortBy={sortBy} filterBy={filterBy} filterOption={filterOption}/>          
         </Suspense>
-        <Suspense key={query + currentPage}>
-          <ListView query={query} currentPage={currentPage}/>
+        <Suspense key={query + currentPage + sortBy + filterBy + filterOption}>
+          <ListView query={query} currentPage={currentPage} sortBy={sortBy} filterBy={filterBy} filterOption={filterOption}/>
         </Suspense>
       </Toggle>
 
