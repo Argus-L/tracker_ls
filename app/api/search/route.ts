@@ -6,7 +6,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     const query = paramString.get('query') || ""
     const sortBy = paramString.get('sortBy') || "id"
     const filterBy = paramString.get('filterBy') || ""
-    const filterOption = paramString.get('filterOptions') || ""
+    const filterOption = paramString.get('filterOption') || ""
 
     if((isNaN(Number(query)) || query == null || query == "") && filterBy == "") {
         try {
@@ -45,24 +45,55 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
                 }
             })
             return (
-                    NextResponse.json({message:"testing123", jobs}, {status: 200})
+                    NextResponse.json({jobs}, {status: 200})
                 )
         } catch (error) {
             console.log(error);
         }
-    } else if(filterBy !== "") {
+    } else if((isNaN(Number(query)) || query == null || query == "") && filterBy !== "") {
         const jobs = await prisma.post.findMany({
             where: {
                 OR: [
                     {
                         location: {
-                            contains: filterOption,
+                            contains: filterOption
                         }
                     },
                     {
                         company: {
-                            contains: filterOption,
+                            contains: filterOption
                         }
+                    }
+                ],
+                AND: [
+                    {
+                        OR: [
+                            {
+                                title: {
+                                    contains: query,
+                                },
+                            },
+                            {
+                                location: {
+                                    contains: query,
+                                },
+                            },
+                            {
+                                skills: {
+                                    contains: query,
+                                },
+                            },
+                            {
+                                company: {
+                                    contains: query,
+                                },
+                            },
+                            {
+                                description: {
+                                    contains: query,
+                                },
+                            },
+                        ]
                     }
                 ]
             },
@@ -71,25 +102,44 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
             }
         })
         return (
-            NextResponse.json({message:"HELLO", jobs}, {status: 200})
+            NextResponse.json({jobs}, {status: 200})
         )
     } else {
         try {
             const jobs = await prisma.post.findMany({
-                where:{
+                where: {
                     OR: [
                         {
-                            salary: {
-                                equals: Number(query)
+                            location: {
+                                contains: filterOption
                             }
                         },
                         {
-                            salary: {
-                                lte: Number(query)
+                            company: {
+                                contains: filterOption
                             }
+                        }
+                    ],
+                    AND: [
+                        {
+                            OR: [
+                                {
+                                    salary: {
+                                        equals: Number(query)
+                                    }
+                                },
+                                {
+                                    salary: {
+                                        lte: Number(query)
+                                    }
+                                }        
+                            ]
                         }
                     ]
                 },
+                orderBy: {
+                    [sortBy]: 'asc'
+                }
             })
             return NextResponse.json({jobs}, {status: 200})
         } catch (error) {
