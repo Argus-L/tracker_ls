@@ -39,7 +39,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
             },
         })
         return (
-            NextResponse.json(optionsByFilter, {status:200})
+            NextResponse.json({optionsByFilter}, {status:200})
         )
     }
 }

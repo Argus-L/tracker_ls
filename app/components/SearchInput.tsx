@@ -5,7 +5,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useState, useEffect, useRef } from 'react';
 import { NEXT_URL } from '@/app/components/rootURL';
 import useSWR from 'swr';
-import { getFilter } from '@/app/components/getFilter'
+
 
 const fetchFilterOptions = async (url: string) => {
     const res = await fetch(url);
@@ -21,12 +21,11 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
     const [selectedFilterBy, setSelectedFilterBy] = useState('');
     const [selectedFilterOptions, setSelectedFilterOptions] = useState('');
     const [initOptions, setInitOptions] = useState(['']);
-    const optionsRef = useRef([]);
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const {data, isLoading, isValidating} = useSWR(`${NEXT_URL}/api/filter?filterBy=${selectedFilterBy}`, fetchFilterOptions)
+    const {data} = useSWR(`${NEXT_URL}/api/filter?filterBy=${selectedFilterBy}`, fetchFilterOptions)
 
     useEffect(()=> {
         if(selectedFilterBy == '') {
