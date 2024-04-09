@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import Table from '@/app/components/table';
 import Toggle from '@/app/components/toggle';
 import ListView from '@/app/components/listView';
+import { NEXT_URL } from '@/app/components/rootURL';
 
 export default function Home({
   searchParams,
@@ -21,6 +22,7 @@ export default function Home({
   const sortBy = searchParams?.sortBy || '';
   const filterBy = searchParams?.filterBy || '';
   const filterOption = searchParams?.filterOption || '';
+  console.log("THIS IS THE ROOT URL", NEXT_URL);
   
 
   return (
