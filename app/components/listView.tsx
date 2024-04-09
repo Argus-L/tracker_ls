@@ -18,7 +18,7 @@ export default async function JobsList({
     filterOption: string;
 }) {
     const GetSearchResults = async () => {
-      const res = await fetch(`${NEXT_URL}/api/search/?sortBy=${sortBy}&filterBy=${filterBy}&filterOption=${filterOption}&query=${query}`);
+      const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&filterBy=${filterBy}&filterOption=${filterOption}&query=${query}`);
       const data = await res.json();
       return data.jobs;
     }
