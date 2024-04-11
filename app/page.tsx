@@ -22,7 +22,6 @@ export default function Home({
   const sortBy = searchParams?.sortBy || '';
   const filterBy = searchParams?.filterBy || '';
   const filterOption = searchParams?.filterOption || '';
-  console.log("THIS IS THE ROOT URL", NEXT_URL);
   
 
   return (

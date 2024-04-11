@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useDebouncedCallback } from 'use-debounce';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { NEXT_URL } from '@/app/components/rootURL';
 import useSWR from 'swr';
 
