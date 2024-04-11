@@ -31,13 +31,13 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
         if(selectedFilterBy == '') {
             setInitOptions([''])
         } else if (selectedFilterBy == 'location') {
-            const arr:any = [];
+            const arr:any = [''];
             data?.optionsByFilter.forEach((obj:any) => {
                 arr.push(obj.location);
             })
             setInitOptions(arr);
         } else if (selectedFilterBy == 'company') {
-            const arr:any = [];
+            const arr:any = [''];
             data?.optionsByFilter.forEach((obj:any) => {
                 arr.push(obj.company);
             })
