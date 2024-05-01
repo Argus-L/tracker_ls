@@ -4,7 +4,6 @@ import { Suspense } from 'react';
 import Table from '@/app/components/table';
 import Toggle from '@/app/components/toggle';
 import ListView from '@/app/components/listView';
-import { NEXT_URL } from '@/app/components/rootURL';
 
 export default function Home({
   searchParams,
@@ -13,15 +12,19 @@ export default function Home({
     query?:string;
     page?:string;
     sortBy?:string;
-    filterBy?:string;
-    filterOption?:string;
+    locationFilter?:string;
+    companyFilter?:string;
+    minSalary?:string;
+    maxSalary?:string;
   };
 }) {
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const sortBy = searchParams?.sortBy || '';
-  const filterBy = searchParams?.filterBy || '';
-  const filterOption = searchParams?.filterOption || '';
+  const locationFilter = searchParams?.locationFilter || '';
+  const companyFilter= searchParams?.companyFilter || '';
+  const minSalary = searchParams?.minSalary || '';
+  const maxSalary = searchParams?.maxSalary || '';
   
 
   return (
@@ -33,11 +36,11 @@ export default function Home({
           <SearchInput placeholder="Search..." />
       </div>
       <Toggle>
-        <Suspense key={query + currentPage + sortBy + filterBy + filterOption}>
-          <Table query={query} currentPage={currentPage} sortBy={sortBy} filterBy={filterBy} filterOption={filterOption}/>          
+        <Suspense key={query + currentPage + sortBy + locationFilter + companyFilter + minSalary + maxSalary}>
+          <Table query={query} currentPage={currentPage} sortBy={sortBy} locationFilter = {locationFilter} companyFilter = {companyFilter} minSalary = {minSalary} maxSalary = {maxSalary}/>          
         </Suspense>
-        <Suspense key={query + currentPage + sortBy + filterBy + filterOption}>
-          <ListView query={query} currentPage={currentPage} sortBy={sortBy} filterBy={filterBy} filterOption={filterOption}/>
+        <Suspense key={query + currentPage + sortBy + locationFilter + companyFilter + minSalary + maxSalary}>
+          <ListView query={query} currentPage={currentPage} sortBy={sortBy} locationFilter = {locationFilter} companyFilter = {companyFilter} minSalary = {minSalary} maxSalary = {maxSalary}/>
         </Suspense>
       </Toggle>
     </main>

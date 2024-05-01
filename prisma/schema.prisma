@@ -20,6 +20,13 @@ model Post {
   salary Int
   company String
   description String
+  tags LanguageTag[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model LanguageTag {
+  id Int @id @default(autoincrement())
+  name String
+  posts Post[]
 }

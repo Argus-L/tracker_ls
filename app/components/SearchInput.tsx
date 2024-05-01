@@ -16,34 +16,46 @@ const fetchFilterOptions = async (url: string) => {
 };
 
 
+
 export default function SearchInput({placeholder}: {placeholder:string}) {
-    const [selectedSortBy, setSelectedSortBy] = useState('id');
-    const [selectedFilterBy, setSelectedFilterBy] = useState('');
-    const [selectedFilterOptions, setSelectedFilterOptions] = useState('');
-    const [initOptions, setInitOptions] = useState(['']);
+
+    //const [selectedFilterBy, setSelectedFilterBy] = useState('');
+    //const [initOptions, setInitOptions] = useState(['']);
+    const locationArr = [''];
+    const companiesArr = [''];
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const {data} = useSWR(`${NEXT_URL}/api/filter?filterBy=${selectedFilterBy}`, fetchFilterOptions)
+    //const {data} = useSWR(`${NEXT_URL}/api/filter?filterBy=${selectedFilterBy}`, fetchFilterOptions)
+    const {data: locationData} = useSWR(`${NEXT_URL}/api/filter/location`, fetchFilterOptions)
+    const {data: companyData} = useSWR(`${NEXT_URL}/api/filter/company`, fetchFilterOptions)
 
-    useEffect(()=> {
-        if(selectedFilterBy == '') {
-            setInitOptions([''])
-        } else if (selectedFilterBy == 'location') {
-            const arr:any = [''];
-            data?.optionsByFilter.forEach((obj:any) => {
-                arr.push(obj.location);
-            })
-            setInitOptions(arr);
-        } else if (selectedFilterBy == 'company') {
-            const arr:any = [''];
-            data?.optionsByFilter.forEach((obj:any) => {
-                arr.push(obj.company);
-            })
-            setInitOptions(arr);
-        }
-    }, [selectedFilterBy, data?.optionsByFilter]);
+    locationData?.locations.forEach((obj:any) => {
+        locationArr.push(obj.location);
+    });
+
+    companyData?.companies.forEach((obj:any) => {
+        companiesArr.push(obj.company);
+    });
+
+    // useEffect(()=> {
+    //     if(selectedFilterBy == '') {
+    //         setInitOptions([''])
+    //     } else if (selectedFilterBy == 'location') {
+    //         const arr:any = [''];
+    //         data?.optionsByFilter.forEach((obj:any) => {
+    //             arr.push(obj.location);
+    //         })
+    //         setInitOptions(arr);
+    //     } else if (selectedFilterBy == 'company') {
+    //         const arr:any = [''];
+    //         data?.optionsByFilter.forEach((obj:any) => {
+    //             arr.push(obj.company);
+    //         })
+    //         setInitOptions(arr);
+    //     }
+    // }, [selectedFilterBy, data?.optionsByFilter]);
 
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams);
@@ -53,29 +65,51 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
             params.delete('query');
         }
         replace(`${pathname}?${params.toString()}`);
-    }, 400);
+    }, 500);
 
     const updateSelectedSortBy = (e:any) => {
         const params = new URLSearchParams(searchParams);
-        setSelectedSortBy(e.target.value);
         params.set("sortBy", e.target.value);
         replace(`${pathname}?${params.toString()}`);
     }
 
-    const updateSelectedFilterBy = async (e:any) => {
+    // const updateSelectedFilterBy = async (e:any) => {
+    //     const params = new URLSearchParams(searchParams);
+    //     setSelectedFilterBy(e.target.value);
+    //     params.set("filterBy", e.target.value);
+    //     params.set("filterOption", "");
+    //     replace(`${pathname}?${params.toString()}`);
+    // }
+
+    // const updateSelectedFilterOptions = async (e:any) => {
+    //     const params = new URLSearchParams(searchParams);
+    //     params.set("filterOption", e.target.value);
+    //     replace(`${pathname}?${params.toString()}`);
+    // }
+
+    const updateLocationFilter = async (e:any) => {
         const params = new URLSearchParams(searchParams);
-        setSelectedFilterBy(e.target.value);
-        params.set("filterBy", e.target.value);
-        params.set("filterOption", "");
+        params.set("locationFilter", e.target.value);
         replace(`${pathname}?${params.toString()}`);
     }
 
-    const updateSelectedFilterOptions = async (e:any) => {
+    const updateCompanyFilter = async (e:any) => {
         const params = new URLSearchParams(searchParams);
-        setSelectedFilterOptions(e.target.value);
-        params.set("filterOption", e.target.value);
+        params.set("companyFilter", e.target.value);
         replace(`${pathname}?${params.toString()}`);
     }
+
+    const setMinSalary = useDebouncedCallback(async  (e:any) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("minSalary", e.target.value);
+        replace(`${pathname}?${params.toString()}`);
+    }, 500)
+
+    const setMaxSalary = useDebouncedCallback(async (e:any) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("maxSalary", e.target.value);
+        replace(`${pathname}?${params.toString()}`);
+    }, 500)
 
     return (
         <div className ="flex justify-center w-2/5 flex-col">
@@ -96,7 +130,6 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                     Sort by:
                     <select 
                         className = "text-black py-1 text-center rounded-md m-1"
-                        value={selectedSortBy}
                         onChange={(e=> updateSelectedSortBy(e))}>
                             <option value="id">All</option>
                             <option value="location">Location</option>
@@ -106,8 +139,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                             <option value="updatedAt">Date Updated</option>
                     </select>
                 </label>
-                <label className="text-slate-200">
-                    {/*select the category by which you will filter, loop through category and return an array of the unique values for the options of the next drop down*/}
+                {/* <label className="text-slate-200">
                     Filter by:
                     <select 
                         className = "text-black py-1 text-center rounded-md m-1"
@@ -120,15 +152,53 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                     </select>
                 </label>
                 <label className="text-slate-200">
-                    {/*filters by category*/}
                     <select 
                         className = "text-black py-1 px-1 text-center rounded-md m-1"
-                        value={selectedFilterOptions}
                         onChange={updateSelectedFilterOptions}>
                             {initOptions.map((option, index) => (
                                 <option key={index} value={option}>{option}</option>
                             ))}
                     </select>
+                </label> */}
+                <label className="text-slate-200">
+                    Location:
+                    {/*Location Filter Dropdown*/}
+                        <select
+                            className = "text-black py-1 px-1 text-center rounded-md m-1"
+                            onChange={updateLocationFilter}>
+                                {locationArr.map((option, index) => (
+                                    <option key={index} value={option}>{option}</option>
+                                ))}
+                            </select>
+                </label>
+                <label className="text-slate-200">
+                    Company:
+                    {/*Location Filter Dropdown*/}
+                        <select
+                            className = "text-black py-1 px-1 text-center rounded-md m-1"
+                            onChange={updateCompanyFilter}>
+                                {companiesArr.map((option, index) => (
+                                    <option key={index} value={option}>{option}</option>
+                                ))}
+                            </select>
+                </label>
+                <label>
+                    Min Salary:
+                    <input 
+                        type = "number"
+                        className = "text-black py-1 px-1 text-center rounded-md m-1"
+                        onChange={setMinSalary}
+                        //defaultValue={searchParams.get('minSalary')?.toString()}
+                    />
+                </label>
+                <label>
+                    Max Salary:
+                    <input 
+                        type = "number"
+                        className = "text-black py-1 px-1 text-center rounded-md m-1"
+                        onChange={setMaxSalary}
+                        //defaultValue={searchParams.get('maxSalary')?.toString()}
+                    />
                 </label>
             </div>
         </div>

@@ -5,6 +5,8 @@ import {Fragment, useRef} from 'react'
 import {Toaster, toast} from 'react-hot-toast'
 import {useRouter} from 'next/navigation'
 import { NEXT_URL } from '@/app/components/rootURL';
+import AsyncCreatableSelect from 'react-select/creatable'
+import useSWR from 'swr';
 
 const submitPost = async ({title, location, skills, salary, company, description} : {title:string, location:string, skills:string, salary:number, company:string, description:string}) => {
   const res = fetch(`${NEXT_URL}/api/blog`, {
@@ -16,6 +18,14 @@ const submitPost = async ({title, location, skills, salary, company, description
   return (await res).json();
 }
 
+const fetchData = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+      throw new Error ("Failed to fetch")
+  }
+  return res.json();
+};
+
 const AddPost = () => {
   
   const titleRef = useRef<HTMLInputElement | null>(null);
@@ -24,7 +34,15 @@ const AddPost = () => {
   const salaryRef = useRef<HTMLInputElement | null>(null);
   const companyRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
+  const tagOptions: string[] = [];
   const router = useRouter();
+
+  const {data: tagData} = useSWR(`${NEXT_URL}/api/tags`, fetchData)
+
+  tagData?.tags.forEach((obj:any) => {
+    tagOptions.push(obj.name);
+  });
+
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
@@ -56,6 +74,12 @@ const AddPost = () => {
           <input ref={salaryRef} placeholder="Enter salary" type="number" className="rounded-md px-4 py-2 w-full my-2"/>
           <input ref={companyRef} placeholder="Enter company" type="text" className="rounded-md px-4 py-2 w-full my-2"/>
           <textarea ref={descriptionRef} placeholder="Enter description" className="rounded-md px-4 w-full my-2"></textarea>
+          <AsyncCreatableSelect 
+            isMulti
+            isClearable
+            placeholder = "Add or create programming language tags"
+            options={tagOptions}
+            />
           <button className="font-semibold px-3 py-1 shadow-xl bg-slate-300 rounded-lg m-auto hover:bg-slate-100">Submit</button>
         </form>
       </div>

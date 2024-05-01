@@ -8,17 +8,21 @@ export default async function JobsList({
     query,
     currentPage,
     sortBy,
-    filterBy,
-    filterOption
+    locationFilter,
+    companyFilter,
+    minSalary,
+    maxSalary,
 }: {
     query: string;
     currentPage:number;
     sortBy: string;
-    filterBy: string;
-    filterOption: string;
+    locationFilter:string;
+    companyFilter:string;
+    minSalary:string;
+    maxSalary:string;
 }) {
     const GetSearchResults = async () => {
-      const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&filterBy=${filterBy}&filterOption=${filterOption}&query=${query}`);
+      const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
       const data = await res.json();
       return data.jobs;
     }

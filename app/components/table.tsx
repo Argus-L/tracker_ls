@@ -7,25 +7,35 @@ export default async function JobsTable({
     query,
     currentPage,
     sortBy,
-    filterBy,
-    filterOption
+    locationFilter,
+    companyFilter,
+    minSalary,
+    maxSalary,
 }: {
     query: string;
     currentPage:number;
     sortBy: string;
-    filterBy: string;
-    filterOption:string;
+    locationFilter:string;
+    companyFilter:string;
+    minSalary:string;
+    maxSalary:string;
 }) {
 
     const GetSearchResults = async () => {
-        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&filterBy=${filterBy}&filterOption=${filterOption}&query=${query}`);
+        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
         const data = await res.json();
         return data.jobs;
     }
 
+    const getMessageResults = async () => {
+        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
+        const data = await res.json();
+        return data.message;
+    }
+
+    const message = await getMessageResults();
     const jobs = await GetSearchResults();
-    
-    
+    console.log(message)
     return (
         <div className="flex flex-col min-w-full align-middle p-5">
             <table className="min-w-full text-gray-100 md:table">
