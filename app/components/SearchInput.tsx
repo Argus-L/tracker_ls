@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useDebouncedCallback } from 'use-debounce';
-import { useState, useEffect } from 'react';
 import { NEXT_URL } from '@/app/components/rootURL';
 import useSWR from 'swr';
 
@@ -18,16 +17,12 @@ const fetchFilterOptions = async (url: string) => {
 
 
 export default function SearchInput({placeholder}: {placeholder:string}) {
-
-    //const [selectedFilterBy, setSelectedFilterBy] = useState('');
-    //const [initOptions, setInitOptions] = useState(['']);
     const locationArr = [''];
     const companiesArr = [''];
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    //const {data} = useSWR(`${NEXT_URL}/api/filter?filterBy=${selectedFilterBy}`, fetchFilterOptions)
     const {data: locationData} = useSWR(`${NEXT_URL}/api/filter/location`, fetchFilterOptions)
     const {data: companyData} = useSWR(`${NEXT_URL}/api/filter/company`, fetchFilterOptions)
 
@@ -39,24 +34,6 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
         companiesArr.push(obj.company);
     });
 
-    // useEffect(()=> {
-    //     if(selectedFilterBy == '') {
-    //         setInitOptions([''])
-    //     } else if (selectedFilterBy == 'location') {
-    //         const arr:any = [''];
-    //         data?.optionsByFilter.forEach((obj:any) => {
-    //             arr.push(obj.location);
-    //         })
-    //         setInitOptions(arr);
-    //     } else if (selectedFilterBy == 'company') {
-    //         const arr:any = [''];
-    //         data?.optionsByFilter.forEach((obj:any) => {
-    //             arr.push(obj.company);
-    //         })
-    //         setInitOptions(arr);
-    //     }
-    // }, [selectedFilterBy, data?.optionsByFilter]);
-
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams);
         if (term) {
@@ -67,25 +44,11 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
         replace(`${pathname}?${params.toString()}`);
     }, 500);
 
-    const updateSelectedSortBy = (e:any) => {
+    const updateSelectedSortBy = async (e:any) => {
         const params = new URLSearchParams(searchParams);
         params.set("sortBy", e.target.value);
         replace(`${pathname}?${params.toString()}`);
     }
-
-    // const updateSelectedFilterBy = async (e:any) => {
-    //     const params = new URLSearchParams(searchParams);
-    //     setSelectedFilterBy(e.target.value);
-    //     params.set("filterBy", e.target.value);
-    //     params.set("filterOption", "");
-    //     replace(`${pathname}?${params.toString()}`);
-    // }
-
-    // const updateSelectedFilterOptions = async (e:any) => {
-    //     const params = new URLSearchParams(searchParams);
-    //     params.set("filterOption", e.target.value);
-    //     replace(`${pathname}?${params.toString()}`);
-    // }
 
     const updateLocationFilter = async (e:any) => {
         const params = new URLSearchParams(searchParams);
@@ -130,7 +93,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                     Sort by:
                     <select 
                         className = "text-black py-1 text-center rounded-md m-1"
-                        onChange={(e=> updateSelectedSortBy(e))}>
+                        onChange={(updateSelectedSortBy)}>
                             <option value="id">All</option>
                             <option value="location">Location</option>
                             <option value="salary">Salary</option>
@@ -139,27 +102,6 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                             <option value="updatedAt">Date Updated</option>
                     </select>
                 </label>
-                {/* <label className="text-slate-200">
-                    Filter by:
-                    <select 
-                        className = "text-black py-1 text-center rounded-md m-1"
-                        value={selectedFilterBy}
-                        onChange={(e=> updateSelectedFilterBy(e))}
-                        >
-                            <option value="">All</option>
-                            <option value="location">Location</option>
-                            <option value="company">Company</option>
-                    </select>
-                </label>
-                <label className="text-slate-200">
-                    <select 
-                        className = "text-black py-1 px-1 text-center rounded-md m-1"
-                        onChange={updateSelectedFilterOptions}>
-                            {initOptions.map((option, index) => (
-                                <option key={index} value={option}>{option}</option>
-                            ))}
-                    </select>
-                </label> */}
                 <label className="text-slate-200">
                     Location:
                     {/*Location Filter Dropdown*/}
@@ -188,7 +130,6 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                         type = "number"
                         className = "text-black py-1 px-1 text-center rounded-md m-1"
                         onChange={setMinSalary}
-                        //defaultValue={searchParams.get('minSalary')?.toString()}
                     />
                 </label>
                 <label>
@@ -197,7 +138,6 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                         type = "number"
                         className = "text-black py-1 px-1 text-center rounded-md m-1"
                         onChange={setMaxSalary}
-                        //defaultValue={searchParams.get('maxSalary')?.toString()}
                     />
                 </label>
             </div>

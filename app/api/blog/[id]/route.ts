@@ -4,7 +4,10 @@ import prisma from '@/prisma';
 export const GET = async (req: Request, res: NextResponse) => {
     try {
         const id = parseInt(req.url.split("/blog/")[1]);
-        const post = await prisma?.post.findFirst({where: {id}});
+        const post = await prisma?.post.findFirst({
+            include: {tags: true},
+            where: {id}
+        });
         if(!post) 
             return NextResponse.json({message: "Not Found"}, {status: 404});
         return NextResponse.json({message: "Success" , post}, {status: 200});
@@ -18,10 +21,20 @@ export const GET = async (req: Request, res: NextResponse) => {
 export const PUT = async (req: Request, res: NextResponse) => {
     try {
         const id = parseInt(req.url.split("/blog/")[1]);
-        const {title, location, skills, company, salary, description} = await req.json();
-        const post = await prisma?.post.update({
-            data: {title, location, skills, company, salary, description}, 
+        const {title, location, skills, company, salary, description, tags} = await req.json();
+        const post = await prisma?.post.upsert({
             where: {id},
+            update: {
+                title, location, skills, company, salary, description, tags: {
+                    connectOrCreate: tags.map((tag:any) => {
+                        return {
+                            where: {name: tag},
+                            create: {name: tag},
+                        };
+                    })
+                }, 
+            },
+            create: 
         });
         return NextResponse.json({message: "Success" , post}, {status: 200});
     } catch (error) {

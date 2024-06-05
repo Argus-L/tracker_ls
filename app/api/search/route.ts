@@ -13,6 +13,9 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     if((isNaN(Number(query)) || query == null || query == "") && (locationFilter == "" && companyFilter == "" && minSalary == "" && maxSalary == "")) {
         try {
             const jobs = await prisma.post.findMany({
+                include: {
+                    tags: true
+                },
                 where: {
                     OR: [
                         {
@@ -44,7 +47,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
                 },
                 orderBy: {
                     [sortBy]: 'asc'
-                }
+                },
             })
             return (
                     NextResponse.json({message:"1", jobs}, {status: 200})
@@ -54,6 +57,9 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
         }
     } else if((isNaN(Number(query)) || query == null || query == "") && (locationFilter !== "" || companyFilter !== "" || minSalary !== "" || maxSalary!== "")) {
         const jobs = await prisma.post.findMany({
+            include: {
+                tags: true
+            },
             where: {
                 // OR: [
                 //     {
@@ -123,6 +129,9 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     } else if ((isNaN(Number(query))) == false) {
         try {
             const jobs = await prisma.post.findMany({
+                include: {
+                    tags: true
+                },
                 where: {
                     // OR: [
                     //     {

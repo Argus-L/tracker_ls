@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic";
-import DeleteButton from '@/app/components/DeleteButton';
+import DeleteButton from '@/app/components/deleteButton';
 import { NEXT_URL } from '@/app/components/rootURL';
 import Link from 'next/link'
 
@@ -35,7 +35,7 @@ export default async function JobsTable({
 
     const message = await getMessageResults();
     const jobs = await GetSearchResults();
-    console.log(message)
+    //console.log(jobs, message)
     return (
         <div className="flex flex-col min-w-full align-middle p-5">
             <table className="min-w-full text-gray-100 md:table">
@@ -64,6 +64,9 @@ export default async function JobsTable({
                         </th>
                         <th scope="col" className="border">
                             Updated At
+                        </th>
+                        <th scope="col" className="border">
+                            Tags
                         </th>
                         <th scope="col" className="border">
                             Change
@@ -97,9 +100,16 @@ export default async function JobsTable({
                             <td className="border">
                                 <p>{new Date (job.updatedAt).toDateString()}</p>
                             </td>
+                            <td>
+                                {job.tags?.map((tag:any)=> (
+                                    <div key={tag.id}>
+                                        <p>{tag.name}</p>
+                                    </div>
+                                ))}
+                            </td>
                             <td className="border">
                                 <Link href={`/blog/editPost/${job.id}`} className="px-3 py-1.5 mx-2 text-center bg-slate-200 rounded-md font-semibold text-black">Edit</Link>
-                               <DeleteButton id={job.id}/>
+                                <DeleteButton id={job.id}/>
                             </td>
                         </tr>
                     ))}

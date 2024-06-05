@@ -11,6 +11,9 @@ export default function Header() {
             <div>
                 <button className="rounded-md p-2 m-auto bg-slate-300 hover:bg-slate-50" type="button" onClick={() => router.push("/blog/addPost")}>Add Job</button>
             </div>
+            <div>
+                <button className="rounded-md p-2 m-auto bg-slate-300 hover:bg-slate-50" type="button" onClick={() => router.push("/tags/showTags")}>Edit Tags</button>
+            </div>
         </nav>
     );
 }

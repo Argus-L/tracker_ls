@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 import { NEXT_URL } from '@/app/components/rootURL';
-import DeleteButton from '@/app/components/DeleteButton';
+import DeleteButton from '@/app/components/deleteButton';
 import Link from 'next/link'
 
 

@@ -27,6 +27,6 @@ model Post {
 
 model LanguageTag {
   id Int @id @default(autoincrement())
-  name String
+  name String @unique
   posts Post[]
 }
