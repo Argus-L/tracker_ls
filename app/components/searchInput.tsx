@@ -156,7 +156,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                     Tags:
                         <Select
                             isMulti
-                            options = {}
+                            
                         />
                 </label>
             </div>
