@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import SearchInput from './components/searchInput';
 import { Suspense } from 'react';
 import Table from '@/app/components/table';

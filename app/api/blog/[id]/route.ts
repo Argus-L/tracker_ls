@@ -22,19 +22,18 @@ export const PUT = async (req: Request, res: NextResponse) => {
     try {
         const id = parseInt(req.url.split("/blog/")[1]);
         const {title, location, skills, company, salary, description, tags} = await req.json();
-        const post = await prisma?.post.upsert({
+        const post = await prisma?.post.update({
             where: {id},
-            update: {
+            data: {
                 title, location, skills, company, salary, description, tags: {
                     connectOrCreate: tags.map((tag:any) => {
                         return {
-                            where: {name: tag},
                             create: {name: tag},
+                            where: {name: tag},
                         };
                     })
                 }, 
             },
-            create: 
         });
         return NextResponse.json({message: "Success" , post}, {status: 200});
     } catch (error) {

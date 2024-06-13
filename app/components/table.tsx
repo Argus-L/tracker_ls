@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import DeleteButton from '@/app/components/deleteButton';
 import { NEXT_URL } from '@/app/components/rootURL';
 import Link from 'next/link'
@@ -25,6 +26,7 @@ export default async function JobsTable({
         const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
         const data = await res.json();
         return data.jobs;
+        //put this in a useEffect, it should refresh the search results data every time the page loads
     }
 
     const getMessageResults = async () => {
@@ -35,6 +37,7 @@ export default async function JobsTable({
 
     const message = await getMessageResults();
     const jobs = await GetSearchResults();
+
     //console.log(jobs, message)
     return (
         <div className="flex flex-col min-w-full align-middle p-5">

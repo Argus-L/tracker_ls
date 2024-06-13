@@ -5,8 +5,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { NEXT_URL } from '@/app/components/rootURL';
 import useSWR from 'swr';
 
-
-const fetchFilterOptions = async (url: string) => {
+const fetchData = async (url: string) => {
     const res = await fetch(url);
     if (!res.ok) {
         throw new Error ("Failed to fetch")
@@ -14,17 +13,17 @@ const fetchFilterOptions = async (url: string) => {
     return res.json();
 };
 
-
-
 export default function SearchInput({placeholder}: {placeholder:string}) {
     const locationArr = [''];
     const companiesArr = [''];
+    const tagArr = [''];
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const {data: locationData} = useSWR(`${NEXT_URL}/api/filter/location`, fetchFilterOptions)
-    const {data: companyData} = useSWR(`${NEXT_URL}/api/filter/company`, fetchFilterOptions)
+    const {data: locationData} = useSWR(`${NEXT_URL}/api/filter/location`, fetchData)
+    const {data: companyData} = useSWR(`${NEXT_URL}/api/filter/company`, fetchData)
+    const {data: tagData} = useSWR(`${NEXT_URL}/api/tags`, fetchData)
 
     locationData?.locations.forEach((obj:any) => {
         locationArr.push(obj.location);
@@ -33,6 +32,10 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
     companyData?.companies.forEach((obj:any) => {
         companiesArr.push(obj.company);
     });
+
+    tagData?.tags.forEach((obj:any) => {
+        tagArr.push(obj.name);
+    })
 
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams);
@@ -73,6 +76,11 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
         params.set("maxSalary", e.target.value);
         replace(`${pathname}?${params.toString()}`);
     }, 500)
+
+    const updateTagFilter = async (e:any) => {
+        const params = new URLSearchParams(searchParams);
+
+    }
 
     return (
         <div className ="flex justify-center w-2/5 flex-col">
@@ -139,6 +147,10 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                         className = "text-black py-1 px-1 text-center rounded-md m-1"
                         onChange={setMaxSalary}
                     />
+                </label>
+                <label className="text-slate-200">
+                    Tags:
+                        
                 </label>
             </div>
         </div>

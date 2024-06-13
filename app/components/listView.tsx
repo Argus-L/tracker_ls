@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 import { NEXT_URL } from '@/app/components/rootURL';
 import DeleteButton from '@/app/components/deleteButton';
 import Link from 'next/link'
@@ -41,6 +42,11 @@ export default async function JobsList({
             <p>Description: {job.description}</p>
             <p>Created At: {new Date (job.createdAt).toDateString()}</p>
             <p>Updated At: {new Date (job.updatedAt).toDateString()}</p>
+            <p>Programming Languages: {job.tags?.map((tag:any)=> (
+                                    <div key={tag.id}>
+                                        <p>{tag.name}</p>
+                                    </div>
+                                ))}</p>
             <div className="text-right">
               <Link href={`/blog/editPost/${job.id}`} className="px-3 py-1.5 mx-2 text-center bg-slate-900 rounded-md font-semibold text-slate-200">Edit</Link>
               <DeleteButton id={job.id} />

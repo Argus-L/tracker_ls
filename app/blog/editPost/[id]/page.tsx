@@ -58,7 +58,7 @@ const EditPost = ({ params }:{ params:{ id : number }}) => {
   const salaryRef = useRef<HTMLInputElement | null>(null);
   const companyRef = useRef<HTMLInputElement | null>(null);
   const descriptionRef = useRef<HTMLTextAreaElement | null>(null);
-  const [selectedTags, setSelectedTags] = useState([''])
+  const [selectedTags, setSelectedTags] = useState([""]);
   const router = useRouter();
 
   const tagOptions: string[] = [];
@@ -93,6 +93,11 @@ const EditPost = ({ params }:{ params:{ id : number }}) => {
     e.preventDefault();
     if (titleRef.current && locationRef.current && skillsRef.current && salaryRef.current && companyRef.current && descriptionRef.current) {
       toast.loading("Sending Request...", {id: "1"})
+      const chosenTags: string [] = [];
+      selectedTags.forEach((obj:any)=> {
+        chosenTags.push(obj.value)
+      })
+      console.log(chosenTags)
         await updatePost({
         id:params.id,
         title: titleRef.current?.value,
@@ -101,7 +106,7 @@ const EditPost = ({ params }:{ params:{ id : number }}) => {
         salary: salaryRef.current?.valueAsNumber,
         company: companyRef.current?.value,
         description: descriptionRef.current?.value,
-        tags: selectedTags
+        tags: chosenTags
       });
       toast.success("Job Posted Successfully", {id: "1"})
       router.push('/');
@@ -118,9 +123,23 @@ const EditPost = ({ params }:{ params:{ id : number }}) => {
   }
 
   const onChange = async (selectedOption:any, metaAction:any) => {
-    setSelectedTags(selectedOption);
-  }
-  console.log(selectedTags)
+    setSelectedTags(selectedOption)
+  };
+
+  // const testThing = [
+  //   {
+  //     label: "HTML5",
+  //     value: "HTML5",
+  //   },
+  //   {
+  //     label: "CSS",
+  //     value: "CSS",
+  //   }
+  // ]
+
+
+
+  console.log("hihihi", selectedTags)
   return <Fragment>
     <Toaster />
     <div className="w-1/3 m-auto flex my-4">
