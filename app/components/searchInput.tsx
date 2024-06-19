@@ -155,13 +155,13 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                         onChange={setMaxSalary}
                     />
                 </label>
-                <div className="w-1/5 flex-row">
-                <label className="text-slate-200">
+                <div className="w-1/5">
+                <label className="text-slate-200 flex">
                     Tags:
                         <AsyncSelect
                             isMulti
                             options = {finalTagArr}
-                            className = "text-black"
+                            className = "text-black py-1 px-1 text-center rounded-md w-3/5"
                             onChange = {updateTagFilter}
                         />
                 </label>
