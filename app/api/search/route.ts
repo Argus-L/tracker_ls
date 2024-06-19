@@ -9,8 +9,10 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     const companyFilter = paramString.get('companyFilter') || ""
     const minSalary = paramString.get('minSalary') || ""
     const maxSalary = paramString.get('maxSalary') || ""
+    const selectedTags = paramString.get('tags') || ""
+    const selectedTagsFinal = selectedTags.split(" ");
 
-    if((isNaN(Number(query)) || query == null || query == "") && (locationFilter == "" && companyFilter == "" && minSalary == "" && maxSalary == "")) {
+    if((isNaN(Number(query)) || query == null || query == "") && (locationFilter == "" && companyFilter == "" && minSalary == "" && maxSalary == "" && selectedTags.length == 0)) {
         try {
             const jobs = await prisma.post.findMany({
                 include: {
@@ -50,12 +52,12 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
                 },
             })
             return (
-                    NextResponse.json({message:"1", jobs}, {status: 200})
+                    NextResponse.json({message: "1", jobs}, {status: 200})
                 )
         } catch (error) {
             console.log(error);
         }
-    } else if((isNaN(Number(query)) || query == null || query == "") && (locationFilter !== "" || companyFilter !== "" || minSalary !== "" || maxSalary!== "")) {
+    } else if((isNaN(Number(query)) || query == null || query == "") && (locationFilter !== "" || companyFilter !== "" || minSalary !== "" || maxSalary!== "" || selectedTagsFinal.length > 0)) {
         const jobs = await prisma.post.findMany({
             include: {
                 tags: true
@@ -116,6 +118,15 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
                             lte: Number(maxSalary) || undefined,
                             gte: Number(minSalary) || undefined,
                         }
+                    },
+                    {
+                        tags: {
+                            some: {
+                                OR: selectedTagsFinal.map((str) => ({
+                                    name: {contains: str}
+                                }))
+                            }
+                        }
                     }
                 ]
             },
@@ -124,7 +135,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
             }
         })
         return (
-            NextResponse.json({message:"2",jobs}, {status: 200})
+            NextResponse.json({message: "2", jobs}, {status: 200})
         )
     } else if ((isNaN(Number(query))) == false) {
         try {

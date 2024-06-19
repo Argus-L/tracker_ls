@@ -17,6 +17,7 @@ export default function Home({
     companyFilter?:string;
     minSalary?:string;
     maxSalary?:string;
+    tags?: string[];
   };
 }) {
   const query = searchParams?.query || '';
@@ -26,6 +27,7 @@ export default function Home({
   const companyFilter= searchParams?.companyFilter || '';
   const minSalary = searchParams?.minSalary || '';
   const maxSalary = searchParams?.maxSalary || '';
+  const tags = searchParams?.tags || [''];
   
 
   return (
@@ -33,15 +35,15 @@ export default function Home({
       <div className="md:w-2/4 sm:w-3/4 m-auto p-4 my-4 rounded-lg bg-slate-800 drop-shadow-xl">
         <h1 className="text-slate-200 text-center text-2xl font-extrabold font-family[verdana]">Job Tracker</h1>
       </div>
-      <div className="flex flex-col items-center w-full">
+      <div className="flex justify-center w-4/5 m-auto">
           <SearchInput placeholder="Search..." />
       </div>
       <Toggle>
         <Suspense key={query + currentPage + sortBy + locationFilter + companyFilter + minSalary + maxSalary}>
-          <Table query={query} currentPage={currentPage} sortBy={sortBy} locationFilter = {locationFilter} companyFilter = {companyFilter} minSalary = {minSalary} maxSalary = {maxSalary}/>          
+          <Table query={query} currentPage={currentPage} sortBy={sortBy} locationFilter = {locationFilter} companyFilter = {companyFilter} minSalary = {minSalary} maxSalary = {maxSalary} tags = {tags}/>          
         </Suspense>
         <Suspense key={query + currentPage + sortBy + locationFilter + companyFilter + minSalary + maxSalary}>
-          <ListView query={query} currentPage={currentPage} sortBy={sortBy} locationFilter = {locationFilter} companyFilter = {companyFilter} minSalary = {minSalary} maxSalary = {maxSalary}/>
+          <ListView query={query} currentPage={currentPage} sortBy={sortBy} locationFilter = {locationFilter} companyFilter = {companyFilter} minSalary = {minSalary} maxSalary = {maxSalary} tags = {tags}/>
         </Suspense>
       </Toggle>
     </main>

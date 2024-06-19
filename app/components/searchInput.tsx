@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useDebouncedCallback } from 'use-debounce';
 import { NEXT_URL } from '@/app/components/rootURL';
-import Select from 'react-select'
+import AsyncSelect from 'react-select'
 import useSWR from 'swr';
 
 const fetchData = async (url: string) => {
@@ -17,8 +17,7 @@ const fetchData = async (url: string) => {
 export default function SearchInput({placeholder}: {placeholder:string}) {
     const locationArr = [''];
     const companiesArr = [''];
-    const tagArr = [''];
-    const finalTagArr = [''];
+    const tagArr: string [] = [];
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
@@ -39,7 +38,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
         tagArr.push(obj.name);
     })
 
-
+    const finalTagArr = tagArr.map(str => ({label: str, value: str}));
 
     const handleSearch = useDebouncedCallback((term: string) => {
         const params = new URLSearchParams(searchParams);
@@ -81,15 +80,19 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
         replace(`${pathname}?${params.toString()}`);
     }, 500)
 
-    const updateTagFilter = async (e:any) => {
+    const updateTagFilter = async (selectedOption:any) => {
         const params = new URLSearchParams(searchParams);
-
+        const tagNames: string[] = [];
+        selectedOption.forEach((obj:any) => {
+            tagNames.push(obj.value)
+        })
+        params.set("tags", tagNames.join(' '));
+        replace(`${pathname}?${decodeURIComponent(params.toString())}`);
     }
 
     return (
-        <div className ="flex justify-center w-2/5 flex-col">
-            <div className ="flex justify-center w-full">
-                <label htmlFor="search" className="sr-only">Search</label>
+        <div className ="flex justify-center w-full flex-col">
+            <div className ="flex w-3/5 m-auto">
                 <input 
                     className="py-1 w-2/3 sm:px-5 sm:py-3 flex-1 text-slate-200 bg-slate-800 focus:bg-black rounded-lg focus:outline-none focus:ring-[1px] focus:ring-slate-500 placeholder:text-slate-200"
                     placeholder={placeholder}
@@ -99,7 +102,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                 defaultValue={searchParams.get('query')?.toString()}
                 />
             </div>
-            <div className = "flex justify-center w-3/4 m-auto">
+            <div className = "flex w-full m-auto">
                 <label className="text-slate-200">
                     {/*get list of jobs and order by option*/}
                     Sort by:
@@ -136,7 +139,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                                 ))}
                             </select>
                 </label>
-                <label>
+                <label className="text-slate-200">
                     Min Salary:
                     <input 
                         type = "number"
@@ -144,7 +147,7 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                         onChange={setMinSalary}
                     />
                 </label>
-                <label>
+                <label className="text-slate-200">
                     Max Salary:
                     <input 
                         type = "number"
@@ -152,13 +155,17 @@ export default function SearchInput({placeholder}: {placeholder:string}) {
                         onChange={setMaxSalary}
                     />
                 </label>
+                <div className="w-1/5 flex-row">
                 <label className="text-slate-200">
                     Tags:
-                        <Select
+                        <AsyncSelect
                             isMulti
-                            
+                            options = {finalTagArr}
+                            className = "text-black"
+                            onChange = {updateTagFilter}
                         />
                 </label>
+                </div>
             </div>
         </div>
     )

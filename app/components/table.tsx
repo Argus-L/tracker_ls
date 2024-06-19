@@ -12,6 +12,7 @@ export default async function JobsTable({
     companyFilter,
     minSalary,
     maxSalary,
+    tags,
 }: {
     query: string;
     currentPage:number;
@@ -20,17 +21,18 @@ export default async function JobsTable({
     companyFilter:string;
     minSalary:string;
     maxSalary:string;
+    tags:string[];
 }) {
 
     const GetSearchResults = async () => {
-        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
+        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}&tags=${tags}`);
         const data = await res.json();
         return data.jobs;
         //put this in a useEffect, it should refresh the search results data every time the page loads
     }
 
     const getMessageResults = async () => {
-        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
+        const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}&tags=${tags}`);
         const data = await res.json();
         return data.message;
     }
@@ -38,7 +40,7 @@ export default async function JobsTable({
     const message = await getMessageResults();
     const jobs = await GetSearchResults();
 
-    //console.log(jobs, message)
+    console.log(message)
     return (
         <div className="flex flex-col min-w-full align-middle p-5">
             <table className="min-w-full text-gray-100 md:table">

@@ -13,6 +13,7 @@ export default async function JobsList({
     companyFilter,
     minSalary,
     maxSalary,
+    tags,
 }: {
     query: string;
     currentPage:number;
@@ -21,9 +22,10 @@ export default async function JobsList({
     companyFilter:string;
     minSalary:string;
     maxSalary:string;
+    tags: string[];
 }) {
     const GetSearchResults = async () => {
-      const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}`);
+      const res = await fetch(`${NEXT_URL}/api/search?sortBy=${sortBy}&locationFilter=${locationFilter}&companyFilter=${companyFilter}&minSalary=${minSalary}&maxSalary=${maxSalary}&query=${query}&tags=${tags}`);
       const data = await res.json();
       return data.jobs;
     }
